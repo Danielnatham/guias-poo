@@ -3,120 +3,123 @@
 
 using namespace std;
 
-class Lampada{
+class Lamp{
     private:
-        int voltagem;
-        bool estado;
-        bool queimada;
-        string tipo;
-        int potencia;
+        int voltage;
+        bool on;
+        bool burned;
+        string name;
+        int power;
     public:
 
-    void ligar_desligar(){
-        estado = !estado;
+    void on_Off(){
+        if (on){
+            on = false;
+        } else {
+            on = true;
+        }
     }
 
-    void queimou(){
-        queimada = !queimada;
+    void burned_out(){
+        burned = !burned;
     }
 
-    bool get_estado(){
-        return estado;
+    bool get_on(){
+        return on;
     }
 
-    int get_voltagem(){
-        return voltagem;
+    int get_voltage(){
+        return voltage;
     }
 
-    bool get_queimada(){
-        return queimada;
+    bool get_burned(){
+        return burned;
     }
 
-    void set_voltagem(int volt){
+    void set_voltage(int volt){
         if(volt == 110 || volt == 220){
-            voltagem = voltagem;
+            voltage = voltage;
         }      
     }
 
-    void imprime(){
-        cout << "VOLTAGEM: " << voltagem << endl;
-        if(estado){
-            cout << "Estado: Ligada" << endl;
+    void show(){
+        cout << "voltage: " << voltage << endl;
+        if(on == true){
+            cout << "on: Ligada" << endl;
         } else {
-            cout << "Estado: Desligada" << endl;
+            cout << "on: Desligada" << endl;
         }
-        if(queimada){
-            cout <<  "Esta lampada esta queimada" << endl;
+        if(burned == true){
+            cout <<  "Esta Lamp esta queimada" << endl;
         }
     }
 
-    Lampada(int volt, int pot, string tip){
+    Lamp(int volt, int pot, string tip){
 
-        voltagem = volt;
-        potencia = pot;
-        tipo = tip;
-        estado = false;
-        queimada = false;
+        voltage = volt;
+        power = pot;
+        name = tip;
+        on = false;
+        burned = false;
 
          if (volt == 110 || volt == 220){
-             voltagem = volt;
+             voltage = volt;
          }
          else{
-             voltagem = 110;
+             voltage = 110;
          }
      }
 };
 
-class Comodo{
+class Room{
     private: string nome;
-             Lampada &lampada;
+             Lamp lamp;
              int redeEletrica;
     public:
-        Comodo(string nom, Lampada lamp): lampada(lamp){
+        Room(string nom, Lamp lamp_obj): lamp(lamp_obj){
             nome = nom;
-            lampada = lamp;
+            lamp = lamp_obj;
         };
 
         string get_nome() {
             return nome;
         }
 
-        Lampada get_lampada(){
-            return lampada;
+        Lamp get_Lamp(){
+            return lamp;
         }
 
-        void ligarDesligarLampada(){
+        void ligarDesligarLamp(){
 
-            cout << "LIGANDO A LAMPADA DA " << Comodo::get_nome() << endl;
+            cout << "LIGANDO A LAMPADA DA " << Room::get_nome() << endl;
 
-            if(lampada.get_queimada()){
+            lamp.on_Off();
+
+            if(Room::get_Lamp().get_burned() == true){
                 cout << "A lampada esta queimada" << endl;
                 return;
             }
-
-            lampada.ligar_desligar();
-
-            if(lampada.get_estado()){
-                cout <<  "A lampada agora esta ligada" << endl;
+            if(Room::get_Lamp().get_on() == false){
+                cout <<  "A Lamp agora esta desligada" << endl;
             } else {
-                cout <<  "A lampada agora esta desligada" << endl;
+                cout <<  "A Lamp agora esta ligada" << endl;
             }
         }
 
-        void instalar(){
+        void install(){
 
             int rede;
 
-            cout<<"\n=======INSTALANDO LAMPADA EM "<< Comodo::get_nome() << "=====" <<endl;
-            cout << "\nQual a voltagem da rede eletrica?" << endl;
+            cout<<"\n=======COLOCANDO A LAMPADA EM "<< Room::get_nome() << "=====" <<endl;
+            cout << "\nQual a voltage da rede eletrica?" << endl;
             cin >> rede;
-            cout << "VOLTAGEM DA LAMPADA: "<< lampada.get_voltagem() << endl;
+            cout << "voltage DA LAMPADA: "<< lamp.get_voltage() << endl;
             redeEletrica = rede;
 
             cout << "REDE ELETRICA: "<< redeEletrica << endl;
 
-            if (rede > Comodo::get_lampada().get_voltagem()){
-                lampada.queimou();
+            if (rede > Room::get_Lamp().get_voltage()){
+                lamp.burned_out();
                 cout << "Voce queimou a lampada" << endl;
             }
             cout<<"=================================\n"<<endl;        
@@ -126,33 +129,34 @@ class Comodo{
 
 int main(int argc, char const *argv[]){
 
-    int voltagem, potencia;
-    string tipo; 
+    int voltage, power;
+    string name; 
 
     cout<<"=======COMPRANDO LAMPADA========="<<endl;
-    cout<<"Qual o tipo da lamapda"<<endl;
+    cout<<"Qual o name da lampada"<<endl;
     cout<<"Incadescente"<<endl;
     cout<<"Fluorescente"<<endl;
-    cin>>tipo;
-    cout<<"Qual a Voltagem (220 ou 110) da lampada"<<endl;
-    cin>>voltagem;
-    cout<<"Qual a Potencia da lampada"<<endl;
-    cin>>potencia;
+    cin>>name;
+    cout<<"Qual a voltage (220 ou 110) da Lamp"<<endl;
+    cin>>voltage;
+    cout<<"Qual a power da Lamp"<<endl;
+    cin>>power;
     cout<<"=================================\n"<<endl;    
 
-    Lampada lampada(voltagem,potencia,tipo);
+    Lamp Lamp(voltage,power,name);
 
-    lampada.imprime();
+    Lamp.show();
 
-    Comodo Sala("SALA", lampada),Cozinha("COZINHA",lampada),Escritorio("ESCRITORIO", lampada);
+    Room Sala("SALA", Lamp),Cozinha("COZINHA",Lamp),Escritorio("ESCRITORIO", Lamp);
     
-    Sala.instalar();
-    Cozinha.instalar();
-    Escritorio.instalar();
+    Sala.install();
+    Cozinha.install();
+    Escritorio.install();
     
-    Sala.ligarDesligarLampada();
-    Cozinha.ligarDesligarLampada();
-    Escritorio.ligarDesligarLampada();
+    Sala.ligarDesligarLamp();
+    Cozinha.ligarDesligarLamp();
+    Escritorio.ligarDesligarLamp();
+    Sala.ligarDesligarLamp();
        
 
     return 0;
